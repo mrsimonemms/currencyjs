@@ -10,8 +10,6 @@ services:
   - mysql
 before_script:
   - npm install -g jshint
-  - mysql -e 'create database oauth_server;'
-  - node migrate.js --type mysql --host localhost --user root --pass --db oauth_server --port 3306
 script:
   - ant build
 notifications:
