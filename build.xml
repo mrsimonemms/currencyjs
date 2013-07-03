@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="build" basedir=".">
+    
+    <property name="module.build.dir" value="${basedir}/build" />
+    
+    <tstamp>
+        <format property="now" pattern="yyyyMMddHHmm" />
+    </tstamp>
+
+    <macrodef name="exec-node">
+        <attribute name="module" description="The name of the NodeJS module to execute"/>
+        <attribute name="failonerror" default="true" description="Fail if the exit code is not 0"/>
+        <attribute name="dir" default="${basedir}" description=""/>
+        <element name="args" implicit="yes" description="Argument to pass to the exec task"/>
+        <sequential>
+            <exec executable="cmd.exe" failonerror="@{failonerror}" osfamily="winnt" dir="@{dir}">
+                <arg line="/c  @{module}" />
+                <args/>
+
+                <!-- Windows cmd output workaround: http://stackoverflow.com/a/10359327/227349 -->
+                <!-- Forces node's stderror and stdout to a temporary file -->
+                <arg line=" &gt; _tempfile.out 2&lt;&amp;1"/>
+
+                <!-- If command exits with an error, then output the temporary file        -->
+                <!-- to stdout delete the temporary file and finally exit with error level 1  -->
+                <!-- so that the apply task can catch the error if @failonerror="true"        -->
+                <arg line=" || (type _tempfile.out &amp; del _tempfile.out &amp; exit /b 1)"/>
+
+                <!-- Otherwise, just type the temporary file and delete it-->
+                <arg line=" &amp; type _tempfile.out &amp; del _tempfile.out &amp;"/>
+            </exec>
+            <exec executable="@{module}" failonerror="@{failonerror}" osfamily="unix" dir="@{dir}">
+                <args/>
+            </exec>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="exec-node-out">
+        <attribute name="module" description="The name of the NodeJS module to execute"/>
+        <attribute name="failonerror" default="true" description="Fail if the exit code is not 0"/>
+        <attribute name="dir" default="${basedir}" description=""/>
+        <attribute name="outputproperty" description=""/>
+        <element name="args" implicit="yes" description="Argument to pass to the exec task"/>
+        <sequential>
+            <exec executable="cmd.exe" failonerror="@{failonerror}" osfamily="winnt" dir="@{dir}" outputproperty="@{outputproperty}">
+                <arg line="/c  @{module}" />
+                <args/>
+
+                <!-- Windows cmd output workaround: http://stackoverflow.com/a/10359327/227349 -->
+                <!-- Forces node's stderror and stdout to a temporary file -->
+                <arg line=" &gt; _tempfile.out 2&lt;&amp;1"/>
+
+                <!-- If command exits with an error, then output the temporary file        -->
+                <!-- to stdout delete the temporary file and finally exit with error level 1  -->
+                <!-- so that the apply task can catch the error if @failonerror="true"        -->
+                <arg line=" || (type _tempfile.out &amp; del _tempfile.out &amp; exit /b 1)"/>
+
+                <!-- Otherwise, just type the temporary file and delete it-->
+                <arg line=" &amp; type _tempfile.out &amp; del _tempfile.out &amp;"/>
+            </exec>
+            <exec executable="@{module}" failonerror="@{failonerror}" osfamily="unix" dir="@{dir}" outputproperty="@{outputproperty}">
+                <args/>
+            </exec>
+        </sequential>
+    </macrodef>
+
+    <target name="build" depends="clean, init, npm-install-dev, jshint, test" >
+
+        <echo message="Building ${package.name}" />
+        
+        <antcall target="clean" />
+        <antcall target="npm-install" />
+        <antcall target="stage" />
+        <antcall target="generate-build-number" />
+        <antcall target="package" />
+
+    </target>
+    
+    <target name="check-working-copy" depends="package-json">
+        
+        <echo message="Checks no local changes on ${package.name}" />
+        
+        <!-- First check for changes -->
+        <exec executable="git" outputproperty="status.porcelain" errorproperty="status.err">
+            <arg line="status" />
+            <arg line="--porcelain" />
+        </exec>
+        
+        <fail message="You have uncommitted changes">
+            <condition>
+                <not>
+                    <equals arg1="${status.porcelain}" arg2="" />
+                </not>
+            </condition>
+        </fail>
+        
+    </target>
+
+    <target name="clean" depends="init">
+
+        <echo message="Cleaning ${package.name}" />
+
+        <delete dir="${module.build.dir}" />
+        <delete dir="${basedir}/node_modules" />
+
+    </target>
+
+    <target name="dev-build" depends="clean, init, npm-install-dev">
+
+        <echo message="Development build of ${package.name}" />
+
+    </target>
+    
+    <target name="generate-build-number" depends="init">
+
+        <echo message="Generating build number" />
+
+        <property name="build.number" value="${now}" />
+
+        <!-- Add ${build.number} property to ${staging.dir}/package.json -->
+
+    	<filter token="BUILD_NUMBER" value="${build.number}"/>
+    	<copy file="${staging.dir}/package.json" tofile="${staging.dir}/package.json.tmp" filtering="true" />
+    	<delete file="${staging.dir}/package.json" />
+            <move file="${staging.dir}/package.json.tmp" tofile="${staging.dir}/package.json" />
+
+        </target>
+
+    <target name="init" depends="package-json">
+    
+        <echo message="Initializing build for ${package.name}" />
+        
+        <property name="staging.dir" value="${module.build.dir}/staging" />
+        <property name="dist.dir" value="${module.build.dir}/dist" />
+        <mkdir dir="${module.build.dir}" />
+        <mkdir dir="${staging.dir}" />
+        <mkdir dir="${dist.dir}" />
+    
+    </target>
+
+    <target name="jshint" depends="init">
+
+        <echo message="JSHinting ${package.name}" />
+
+        <exec-node module="jshint">
+            <arg value="${basedir}" />
+        </exec-node>
+
+    </target>
+    
+    <target name="npm-install" depends="init">
+
+        <echo message="Resolving public dependencies for ${package.name}" />
+
+        <exec-node module="npm">
+            <arg value="update"/>
+        </exec-node>
+
+    </target>
+    
+    <target name="npm-install-dev" depends="init">
+
+        <echo message="Resolving dev dependencies for ${package.name}" />
+
+        <exec-node module="npm">
+            <arg value="install"/>
+        </exec-node>
+
+    </target>
+    
+    <target name="npm-publish" depends="build, tag">
+        
+        <echo message="Publish ${package.name} to NPM ${staging.dir}" />
+
+        <delete dir="${staging.dir}/node_modules" />
+
+        <exec-node module="npm">
+            <arg value="publish" />
+            <arg value="${staging.dir}" />
+        </exec-node>
+        
+    </target>
+
+    <target name="package" depends="init">
+
+        <echo message="Packaging ${package.name}" />
+
+        <exec-node-out module="npm" dir="${staging.dir}" outputproperty="pack.out">
+            <arg value="pack" />
+            <redirector>
+                <outputfilterchain>
+                    <tokenfilter>
+                        <replaceregex pattern="^\./" replace="" flags="g"/>
+                    </tokenfilter>
+                </outputfilterchain>
+            </redirector>
+        </exec-node-out>
+
+        <echo message="Created package ${pack.out} and copied to ${dist.dir}" />
+        
+        <move file="${staging.dir}/${pack.out}" todir="${dist.dir}" />
+
+    </target>
+
+    <target name="package-json">
+
+        <echo message="Reading package.json" />
+
+    	<script language="javascript">
+
+            importClass(java.io.File);
+            importClass(java.io.FileReader);
+            importClass(java.io.BufferedReader);
+
+    	    var file = new File(project.getProperty("basedir") + "/" + "package.json");
+            fr = new FileReader(file);
+            br = new BufferedReader(fr);
+
+            var data = "";
+            var line;
+
+            while ((line = br.readLine()) != null) {
+                data += line;
+            }
+
+            var properties = eval("(" + data + ")");
+
+            for (i in properties) {
+                if (typeof properties[i] === 'string') {
+                    project.setProperty("package." + i, properties[i]);
+                }
+            }
+
+    	</script>
+
+    </target>
+    
+    <target name="stage" depends="init">
+
+        <echo message="Staging ${package.name}" />
+        
+        <echo message="${module.build.dir}" />
+
+        <copy todir="${staging.dir}" includeEmptyDirs="true">
+            <fileset dir=".">
+                <exclude name="build.xml" />
+                <exclude name="**/*build*/**" />
+                <exclude name="**/*nbproject*/**" />
+                <exclude name="**/*test*/**" />
+                <exclude name="**/.*/**" />
+            </fileset>
+        </copy>
+
+    </target>
+    
+    <target name="tag" depends="init, check-working-copy">
+        
+        <echo message="Create Git tag for ${package.name}" />
+
+        <exec executable="git" failonerror="true">
+            <arg value="tag" />
+            <arg value="-a" />
+            <arg value="v${package.version}" />
+            <arg value="-m" />
+            <arg value="Version ${package.version}" />
+        </exec>
+        
+        <echo message="Push tag to Git" />
+        
+        <exec executable="git" failonerror="true">
+            <arg value="push" />
+            <arg value="origin" />
+            <arg value="v${package.version}" />
+        </exec>
+        
+    </target>
+
+    <target name="test" depends="dev-build">
+
+        <echo message="Running unit tests for ${package.name} with Mocha" />
+
+        <exec-node module="npm">
+            <arg value="test" />
+        </exec-node>
+
+    </target>
+    
+</project>

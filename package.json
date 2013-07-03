@@ -1,0 +1,46 @@
+{
+    "name": "currencyjs",
+    "description": "A free currency converter for NodeJS - uses the European Central Bank's daily feed for accuracy",
+    "version": "0.0.1",
+    "main": "./index",
+    "keywords": [
+        "currency",
+        "conversion",
+        "ecommerce",
+        "finance",
+        "money"
+    ],
+    "dependencies": {
+        "async": "0.2.8",
+        "mysql": "2.0.0-alpha8",
+        "underscore": "1.4.4"
+    },
+    "bundledDependencies": [
+        "async",
+        "mysql",
+        "underscore"
+    ],
+    "devDependencies": {
+        "chai": "*",
+        "optimist": "*",
+        "prompt": "*"
+    },
+    "engines": {
+        "node": ">= 0.6.12"
+    },
+    "author": "Simon Emms <simon@simonemms.com>",
+    "contributors": [
+        {
+            "name": "Simon Emms",
+            "email": "simon@simonemms.com"
+        }
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/riggerthegeek/currencyjs.git"
+    },
+    "licence": "GPL-3.0",
+    "scripts": {
+        "test": "mocha --reporter spec"
+    }
+}

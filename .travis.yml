@@ -1,0 +1,22 @@
+## YAML Template.
+---
+language: node_js
+node_js:
+  - "0.11"
+  - "0.10"
+  - "0.8"
+  - "0.6"
+services:
+  - mysql
+before_script:
+  - npm install -g jshint
+  - mysql -e 'create database oauth_server;'
+  - node migrate.js --type mysql --host localhost --user root --pass --db oauth_server --port 3306
+script:
+  - ant build
+notifications:
+  email:
+    recipients:
+      - simon@simonemms.com
+    on_success: change
+    on_failure: always
