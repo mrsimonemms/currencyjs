@@ -22,6 +22,7 @@
     ],
     "devDependencies": {
         "chai": "*",
+        "mocha": "*",
         "optimist": "*",
         "prompt": "*"
     },
