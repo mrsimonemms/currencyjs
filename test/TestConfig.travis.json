@@ -1,0 +1,16 @@
+{
+    "db": {
+        "mysql": {
+            "host": "localhost",
+            "username": "root",
+            "password": "",
+            "db": "travis_test"
+        },
+        "postgresql": {
+            "host": "localhost",
+            "username": "postgres",
+            "password": "",
+            "db": "travis_test"
+        }
+    }
+}

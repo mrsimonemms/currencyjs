@@ -275,7 +275,7 @@
         
     </target>
 
-    <target name="test" depends="dev-build">
+    <target name="test" depends="init">
 
         <echo message="Running unit tests for ${package.name} with Mocha" />
 
@@ -283,6 +283,12 @@
             <arg value="test" />
         </exec-node>
 
+    </target>
+
+    <target name="travis" depends="clean, init, npm-install-dev, jshint, test" >
+        
+        <echo message="Running Travis tests on ${package.name}" />
+        
     </target>
     
 </project>
