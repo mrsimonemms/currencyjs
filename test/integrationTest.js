@@ -46,13 +46,17 @@ describe('Tests on MySQL', function() {
     
     it('should correctly input the currency info from source', function(done) {
         
+        /* Set timeout for 30 seconds */
+        this.timeout(30000);
+        
         var objCurrency = new CurrencyJS(objDb);
         
         objCurrency.import(function(err, result) {
             
             expect(err).to.be.eql(null);
             
-            expect(result).to.be.an('object');
+            expect(result).to.be.a('number');
+            expect(result).to.be.at.least(0);
             
             done();
             

@@ -12,15 +12,19 @@
     ],
     "dependencies": {
         "async": "0.2.8",
+        "dateformat": "1.0.6-1.2.3",
         "lru-cache": "2.3.0",
         "mysql": "2.0.0-alpha8",
+        "request": "2.21.0",
         "underscore": "1.4.4",
         "xml2js": "0.2.8"
     },
     "bundledDependencies": [
         "async",
+        "dateformat",
         "lru-cache",
         "mysql",
+        "request",
         "underscore",
         "xml2js"
     ],
