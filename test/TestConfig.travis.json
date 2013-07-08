@@ -1,5 +1,9 @@
 {
     "db": {
+        "mongodb": {
+            "host": "localhost",
+            "db": "currency"
+        },
         "mysql": {
             "host": "localhost",
             "username": "root",

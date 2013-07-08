@@ -13,7 +13,7 @@
     "dependencies": {
         "async": "0.2.8",
         "dateformat": "1.0.6-1.2.3",
-        "lru-cache": "2.3.0",
+        "humanize": "0.0.7",
         "mysql": "2.0.0-alpha8",
         "request": "2.21.0",
         "underscore": "1.4.4",
@@ -22,7 +22,7 @@
     "bundledDependencies": [
         "async",
         "dateformat",
-        "lru-cache",
+        "humanize",
         "mysql",
         "request",
         "underscore",
