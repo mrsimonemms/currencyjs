@@ -61,7 +61,7 @@ to run this.  However, it's probably best to run it.
     });
 
 If you have some form of migration script of your own, you can use the actual
-query directly.  You'll find this in _/lib/db/DB___TYPE/store.js_.
+query directly.  You'll find this in */lib/db/DB_TYPE/store.js*.
 
 <a name="importingdata" />
 ## Importing Data
