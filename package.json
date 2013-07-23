@@ -1,7 +1,7 @@
 {
     "name": "currencyjs",
     "description": "A free currency converter for NodeJS - uses the European Central Bank's daily feed for accuracy",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "main": "./lib/CurrencyJS",
     "keywords": [
         "currency",
@@ -12,7 +12,7 @@
     ],
     "dependencies": {
         "async": "0.2.8",
-		"bignumber.js": "1.0.1",
+        "bignumber.js": "1.0.1",
         "dateformat": "1.0.6-1.2.3",
         "humanize": "0.0.7",
         "mysql": "2.0.0-alpha8",
@@ -22,7 +22,7 @@
     },
     "bundledDependencies": [
         "async",
-		"bignumber.js",
+        "bignumber.js",
         "dateformat",
         "humanize",
         "mysql",
