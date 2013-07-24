@@ -6,14 +6,13 @@ node_js:
   - '0.8'
   - '0.6'
 services:
-  #- mongo
+  - mongo
 before_install:
   - cp test/TestConfig.travis.json test/TestConfig.json
 before_script:
   - npm install -g jshint
   - mysql -e 'create database travis_test;'
   #- psql -c 'create database travis_test;' -U postgres
-  #- mongo travis_test --eval 'db.addUser("travis", "test");'
 script:
   - ant travis
 notifications:
