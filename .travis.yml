@@ -12,6 +12,7 @@ before_install:
 before_script:
   - npm install -g jshint
   - mysql -e 'create database travis_test;'
+  - mongo currency --eval 'db.addUser("travis", "test");'
   #- psql -c 'create database travis_test;' -U postgres
 script:
   - ant travis

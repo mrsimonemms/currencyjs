@@ -2,6 +2,8 @@
     "db": {
         "mongodb": {
             "host": "localhost",
+            "username": "travis",
+            "password": "test",
             "db": "currency"
         },
         "mysql": {
