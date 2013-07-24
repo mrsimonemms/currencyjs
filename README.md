@@ -43,6 +43,9 @@ The first thing you need to do is to include the library and create an instance.
         port: 'port' // Optional
     });
 
+See the [Supported Databases](#supporteddatabases) section for the databases you
+can use.
+
 <a name="creatingdatatables" />
 ## Creating Data Tables
 
@@ -220,7 +223,11 @@ This is a list of all the supported currencies and their 3 letter code:
 <a name="supporteddatabases" />
 # Supported Databases
 
- * MySQL (v1.0.0)
+CurrencyJS supports the following databases and from which version.  Simply set
+up the CurrencyJS object with the _string in italics_ below.
+
+ * MySQL (v1.0.0) - _mysql_
+ * MongoDB (v1.1.0) - _mongo_
 
 <a name="bugs" />
 # Bugs
