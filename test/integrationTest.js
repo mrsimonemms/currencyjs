@@ -72,8 +72,8 @@ describe('Tests on MongoDB', function() {
 
         it('should correctly input the currency info from source', function(done) {
 
-            /* Set timeout for 30 seconds */
-            this.timeout(30000);
+            /* Set timeout for 60 seconds - sometimes takes a bit longer locally */
+            this.timeout(60000);
 
             objCurrencyMongo.import(function(err, importCount) {
                 
