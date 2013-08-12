@@ -142,7 +142,7 @@
 
         <echo message="JSHinting ${package.name}" />
 
-        <exec-node module="jshint">
+        <exec-node module="./node_modules/.bin/jshint">
             <arg value="${basedir}" />
         </exec-node>
 
