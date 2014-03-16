@@ -21,20 +21,9 @@
         "underscore": "1.4.4",
         "xml2js": "0.2.8"
     },
-    "bundledDependencies": [
-        "async",
-        "bignumber.js",
-        "dateformat",
-        "humanize",
-        "mongodb",
-        "mysql",
-        "request",
-        "underscore",
-        "xml2js"
-    ],
     "devDependencies": {
         "chai": "*",
-        "jshint": "*",
+        "jshint": "2.4.3",
         "mocha": "*"
     },
     "engines": {
@@ -53,6 +42,6 @@
     },
     "licence": "GPL-3.0",
     "scripts": {
-        "test": "./node_modules/.bin/mocha"
+        "test": "jshint ./ && mocha"
     }
 }
